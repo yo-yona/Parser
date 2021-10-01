@@ -58,7 +58,8 @@ namespace SimbirSoftParser
 
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
             {
-                Console.Write(node.InnerText + " ");
+                WordsCounter.PrintWords(node.InnerText);
+                //Console.Write(node.InnerText + " ");
             }
         }
     }
