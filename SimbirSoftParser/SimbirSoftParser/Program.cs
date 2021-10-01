@@ -7,8 +7,23 @@ using System.Globalization;
 
 namespace SimbirSoftParser
 {
+    class WordsCounter
+    {
+        public void PrintWords(string incoming)
+        {
+            char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t' };
+
+            string[] result = incoming.Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var substring in result)
+            {
+                Console.WriteLine($"Substring: {substring}");
+            }
+        }
+    }
     class Program
     {
+
         //(HttpWebRequest)
         //https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-request-data-using-the-webrequest-class
         static void Main(string[] args)
@@ -16,7 +31,7 @@ namespace SimbirSoftParser
             try
             {
                 // Create a request for the URL.
-                var request = WebRequest.Create("https://www.simbirsoft.com/");
+                var request = WebRequest.Create("https://en.wikipedia.org/wiki/Shellsort");
 
                 // Get the response.
                 WebResponse response = request.GetResponse();
@@ -32,7 +47,9 @@ namespace SimbirSoftParser
                     // Read the content.
                     string responseFromServer = reader.ReadToEnd();
                     // Display the content.
-                    Console.WriteLine(responseFromServer);
+                    //Console.WriteLine(responseFromServer);
+                    WordsCounter count = new WordsCounter();
+                    count.PrintWords(responseFromServer);
                 }
 
                 // Close the response.
