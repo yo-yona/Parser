@@ -9,7 +9,31 @@ namespace SimbirSoftParser
 {
     class WordsCounter
     {
-        public void PrintWords(string incoming)
+        public static string ExtractText(string html)
+        {
+            if (html == null)
+            {
+                throw new ArgumentNullException("html");
+            }
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var chunks = new List<string>();
+
+            foreach (var item in doc.DocumentNode.DescendantsAndSelf())
+            {
+                if (item.NodeType == HtmlNodeType.Text)
+                {
+                    if (item.InnerText.Trim() != "")
+                    {
+                        chunks.Add(item.InnerText.Trim());
+                    }
+                }
+            }
+            return String.Join(" ", chunks);
+        }
+            public static void PrintWords(string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t' };
 
@@ -31,7 +55,7 @@ namespace SimbirSoftParser
             try
             {
                 // Create a request for the URL.
-                var request = WebRequest.Create("https://en.wikipedia.org/wiki/Shellsort");
+                var request = WebRequest.Create("https://www.simbirsoft.com/");
 
                 // Get the response.
                 WebResponse response = request.GetResponse();
@@ -48,8 +72,9 @@ namespace SimbirSoftParser
                     string responseFromServer = reader.ReadToEnd();
                     // Display the content.
                     //Console.WriteLine(responseFromServer);
-                    WordsCounter count = new WordsCounter();
-                    count.PrintWords(responseFromServer);
+                    var countResult = WordsCounter.ExtractText(responseFromServer);
+                    Console.WriteLine(countResult);
+                    //WordsCounter.PrintWords(countResult);
                 }
 
                 // Close the response.
