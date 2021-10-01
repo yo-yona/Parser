@@ -50,15 +50,15 @@ namespace SimbirSoftParser
     {
         static void Main(string[] args)
         {
-            var html = @"https://en.wikipedia.org/wiki/Shellsort";
+            var html = @"https://simbirsoft.com/";
 
             HtmlWeb web = new HtmlWeb();
 
             HtmlDocument doc = web.Load(html);
 
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
             {
-                Console.Write(node.Name + node.InnerText + " ");
+                Console.Write(node.InnerText + " ");
             }
         }
     }
