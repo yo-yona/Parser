@@ -10,39 +10,40 @@ namespace SimbirSoftParser
 {
     class WordsCounter
     {
-        public static string ExtractText(string html)
+        private void SafeDictCount(Dictionary<string, uint> wordStatistics, string word, uint count)
         {
-            if (html == null)
+            if (wordStatistics.ContainsKey(word))
             {
-                throw new ArgumentNullException("html");
+                Console.Write($"'{wordStatistics[word]}. Next is this ++");
+                wordStatistics[word]++;
+                //Console.WriteLine($"'{substring}' met {wordStatistics[substring]} times. {wordStatistics.ContainsKey(substring)}");
             }
-
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-
-            var chunks = new List<string>();
-
-            foreach (var item in doc.DocumentNode.DescendantsAndSelf())
+            else
             {
-                if (item.NodeType == HtmlNodeType.Text)
-                {
-                    if (item.InnerText.Trim() != "")
-                    {
-                        chunks.Add(item.InnerText.Trim());
-                    }
-                }
+                wordStatistics.Add(word, 1);
+                //Console.WriteLine($"'{substring}' added. {wordStatistics[substring]}. {wordStatistics.ContainsKey(substring)}");
             }
-            return String.Join(" ", chunks);
         }
-            public static void PrintWords(string incoming)
+            public static void ExtractWords(Dictionary<string, uint> wordStatistics, string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t' };
 
-            string[] result = incoming.Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
+
 
             foreach (var substring in result)
             {
-                Console.WriteLine($"Substring: {substring}");
+                if (wordStatistics.ContainsKey(substring))
+                {
+                    Console.Write($"'{wordStatistics[substring]}. Next is this ++");
+                    wordStatistics[substring]++;
+                    Console.WriteLine($"'{substring}' met {wordStatistics[substring]} times. {wordStatistics.ContainsKey(substring)}");
+                }
+                else
+                {
+                    wordStatistics.Add(substring, 1);
+                    Console.WriteLine($"'{substring}' added. {wordStatistics[substring]}. {wordStatistics.ContainsKey(substring)}");
+                }
             }
         }
     }
@@ -56,10 +57,18 @@ namespace SimbirSoftParser
 
             HtmlDocument doc = web.Load(html);
 
+            Dictionary<string, uint> wordStatistics = new Dictionary<string, uint>();
+
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
             {
-                WordsCounter.PrintWords(node.InnerText);
+                WordsCounter.ExtractWords(wordStatistics, node.InnerText);
                 //Console.Write(node.InnerText + " ");
+            }
+
+            Console.WriteLine("\n\n===============DICTIONARY==============\n\n");
+            foreach (var entry in wordStatistics)
+            {
+                Console.WriteLine($"{entry.Key} - {entry.Value}");
             }
         }
     }
