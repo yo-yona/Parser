@@ -1,1 +1,1 @@
-# Webscrapper for counting words on a website
+# Web scraper for counting words on a website
