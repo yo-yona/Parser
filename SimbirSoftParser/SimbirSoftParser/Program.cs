@@ -50,7 +50,7 @@ namespace SimbirSoftParser
             }
 
             Console.WriteLine("\n\n===============DICTIONARY==============\n\n");
-            foreach (var entry in wordStatistics)
+            foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {
                 Console.WriteLine($"{entry.Key} - {entry.Value}");
             }
