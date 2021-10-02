@@ -10,40 +10,27 @@ namespace SimbirSoftParser
 {
     class WordsCounter
     {
-        private void SafeDictCount(Dictionary<string, uint> wordStatistics, string word, uint count)
+        //Сделай лучше расширением к dictionary чтобы не передавать параметр!
+        static private void SafeCountIncrement(Dictionary<string, uint> wordStatistics, string word)
         {
             if (wordStatistics.ContainsKey(word))
             {
-                Console.Write($"'{wordStatistics[word]}. Next is this ++");
                 wordStatistics[word]++;
-                //Console.WriteLine($"'{substring}' met {wordStatistics[substring]} times. {wordStatistics.ContainsKey(substring)}");
             }
             else
             {
                 wordStatistics.Add(word, 1);
-                //Console.WriteLine($"'{substring}' added. {wordStatistics[substring]}. {wordStatistics.ContainsKey(substring)}");
             }
         }
-            public static void ExtractWords(Dictionary<string, uint> wordStatistics, string incoming)
+            public static void ExtractWords(Dictionary<string, uint> nodeInnerText, string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t' };
 
-            string[] result = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
+            string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
 
-
-            foreach (var substring in result)
+            foreach (var word in nodeTextDividedIntoWords)
             {
-                if (wordStatistics.ContainsKey(substring))
-                {
-                    Console.Write($"'{wordStatistics[substring]}. Next is this ++");
-                    wordStatistics[substring]++;
-                    Console.WriteLine($"'{substring}' met {wordStatistics[substring]} times. {wordStatistics.ContainsKey(substring)}");
-                }
-                else
-                {
-                    wordStatistics.Add(substring, 1);
-                    Console.WriteLine($"'{substring}' added. {wordStatistics[substring]}. {wordStatistics.ContainsKey(substring)}");
-                }
+                SafeCountIncrement(nodeInnerText, word);
             }
         }
     }
@@ -51,10 +38,8 @@ namespace SimbirSoftParser
     {
         static void Main(string[] args)
         {
-            var html = @"https://simbirsoft.com/";
-
+            var html = "https://simbirsoft.com/"; //@?
             HtmlWeb web = new HtmlWeb();
-
             HtmlDocument doc = web.Load(html);
 
             Dictionary<string, uint> wordStatistics = new Dictionary<string, uint>();
@@ -62,7 +47,6 @@ namespace SimbirSoftParser
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
             {
                 WordsCounter.ExtractWords(wordStatistics, node.InnerText);
-                //Console.Write(node.InnerText + " ");
             }
 
             Console.WriteLine("\n\n===============DICTIONARY==============\n\n");
