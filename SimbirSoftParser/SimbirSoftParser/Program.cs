@@ -24,7 +24,8 @@ namespace SimbirSoftParser
         }
             public static void ExtractWords(Dictionary<string, uint> nodeInnerText, string incoming)
         {
-            char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'' };
+            char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
+            Console.WriteLine($"{incoming}\n");
 
             string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
 
@@ -38,6 +39,7 @@ namespace SimbirSoftParser
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             var html = "https://simbirsoft.com/"; //@?
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(html);
@@ -52,7 +54,7 @@ namespace SimbirSoftParser
             Console.WriteLine("\n\n===============DICTIONARY==============\n\n");
             foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {
-                Console.WriteLine($"{entry.Key} - {entry.Value}");
+                Console.WriteLine($"'{entry.Key}' - {entry.Value}. \t\t\t{wordStatistics[entry.Key]}");
             }
         }
     }
