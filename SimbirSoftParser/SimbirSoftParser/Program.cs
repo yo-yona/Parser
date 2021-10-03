@@ -25,7 +25,6 @@ namespace SimbirSoftParser
             public static void ExtractWords(Dictionary<string, uint> nodeInnerText, string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
-            Console.WriteLine($"{incoming}\n");
 
             string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
 
