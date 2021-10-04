@@ -5,21 +5,25 @@ using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SimbirSoftParser
 {
     class WordsCounter
     {
         //Сделай лучше расширением к dictionary чтобы не передавать параметр!
-        static private void SafeCountIncrement(Dictionary<string, uint> wordStatistics, string word)
+        private static void SafeCountIncrement(Dictionary<string, uint> wordStatistics, string word)
         {
-            if (wordStatistics.ContainsKey(word))
+            if (word.All(c => Char.IsLetter(c)))
             {
-                wordStatistics[word]++;
-            }
-            else
-            {
-                wordStatistics.Add(word, 1);
+                if (wordStatistics.ContainsKey(word))
+                {
+                    wordStatistics[word]++;
+                }
+                else
+                {
+                    wordStatistics.Add(word, 1);
+                }
             }
         }
             public static void ExtractWords(Dictionary<string, uint> nodeInnerText, string incoming)
@@ -27,7 +31,6 @@ namespace SimbirSoftParser
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
 
             string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
-
             foreach (var word in nodeTextDividedIntoWords)
             {
                 SafeCountIncrement(nodeInnerText, word);
