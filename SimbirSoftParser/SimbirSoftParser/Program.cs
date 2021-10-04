@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Net;
 using HtmlAgilityPack;
-using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SimbirSoftParser
 {
