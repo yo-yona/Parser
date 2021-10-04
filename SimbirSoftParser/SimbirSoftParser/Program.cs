@@ -9,10 +9,30 @@ using System.Text.RegularExpressions;
 
 namespace SimbirSoftParser
 {
+    class WebAgent
+    {
+        public WebAgent(string html)
+        {
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument doc = web.Load(html);
+            WordsCounter wordsCounter = new WordsCounter();
+
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
+            {
+                wordsCounter.ExtractWords(node.InnerText);
+            }
+            wordsCounter.PrintStatistics();
+        }
+    }
     class WordsCounter
     {
-        //Сделай лучше расширением к dictionary чтобы не передавать параметр!
-        private static void SafeCountIncrement(Dictionary<string, uint> wordStatistics, string word)
+        private Dictionary<string, uint> wordStatistics { get; set; }
+        
+        public WordsCounter()
+        {
+            wordStatistics = new Dictionary<string, uint>();
+        }
+        private void SafeCountIncrement(string word)
         {
             if (word.All(c => Char.IsLetter(c)))
             {
@@ -26,38 +46,33 @@ namespace SimbirSoftParser
                 }
             }
         }
-            public static void ExtractWords(Dictionary<string, uint> nodeInnerText, string incoming)
+            public void ExtractWords(string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
 
             string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
             foreach (var word in nodeTextDividedIntoWords)
             {
-                SafeCountIncrement(nodeInnerText, word);
+                SafeCountIncrement(word);
             }
         }
+        public void PrintStatistics()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("===============DICTIONARY==============\n\n");
+            foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
+            {
+                Console.WriteLine($"{entry.Value} \t {entry.Key}");
+            }
+        }
+
     }
     class Program
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            var html = "https://simbirsoft.com/"; //@?
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(html);
-
-            Dictionary<string, uint> wordStatistics = new Dictionary<string, uint>();
-
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
-            {
-                WordsCounter.ExtractWords(wordStatistics, node.InnerText);
-            }
-
-            Console.WriteLine("\n\n===============DICTIONARY==============\n\n");
-            foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
-            {
-                Console.WriteLine($"'{entry.Key}' - {entry.Value}. \t\t\t{wordStatistics[entry.Key]}");
-            }
+            WebAgent webConnection = new WebAgent("https://simbirsoft.com/"); //@?
         }
     }
 }
