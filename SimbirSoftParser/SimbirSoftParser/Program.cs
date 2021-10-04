@@ -11,17 +11,27 @@ namespace SimbirSoftParser
 {
     class WebAgent
     {
+        HtmlDocument doc { get; set; }
+        WordsCounter wordsCounter { get; set; }
         public WebAgent(string html)
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(html);
-            WordsCounter wordsCounter = new WordsCounter();
 
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()[not(parent::script) and not(parent::style)]"))
+            HtmlWeb web = new HtmlWeb();
+            doc = web.Load(html);
+        }
+        public void CountStatistics()
+        {
+            wordsCounter = new WordsCounter();
+            var rule = "//text()[not(parent::script) and not(parent::style)]";
+
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes(rule))
             {
                 wordsCounter.ExtractWords(node.InnerText);
             }
-            wordsCounter.PrintStatistics();
+        }
+        public void PrintStatistics()
+        {
+            wordsCounter?.PrintWordsCounts();
         }
     }
     class WordsCounter
@@ -56,7 +66,7 @@ namespace SimbirSoftParser
                 SafeCountIncrement(word);
             }
         }
-        public void PrintStatistics()
+        public void PrintWordsCounts()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -73,6 +83,8 @@ namespace SimbirSoftParser
         static void Main(string[] args)
         {
             WebAgent webConnection = new WebAgent("https://simbirsoft.com/"); //@?
+            webConnection.CountStatistics();
+            webConnection.PrintStatistics();
         }
     }
 }
