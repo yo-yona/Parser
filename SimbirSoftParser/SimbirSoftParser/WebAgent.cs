@@ -13,6 +13,7 @@ namespace SimbirSoftParser
             HtmlWeb web = new HtmlWeb();
             doc = web.Load(path);
         }
+        
         public void CountStatistics()
         {
             wordsCounter = new WordsCounter();
@@ -23,6 +24,7 @@ namespace SimbirSoftParser
                 wordsCounter.ExtractWords(node.InnerText);
             }
         }
+        
         public void PrintStatistics()
         {
             wordsCounter?.PrintWordsCounts(path);
