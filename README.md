@@ -1,2 +1,2 @@
-## Web scraper for counting words on a website
+## Web scraper for counting words statistics on a website
 (made as a test for SimbirSoft practicum)
