@@ -32,10 +32,13 @@ namespace SimbirSoftParser
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
 
-            string[] nodeTextDividedIntoWords = incoming.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var word in nodeTextDividedIntoWords)
+            string[] textDividedIntoWords = incoming?.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
+            if (textDividedIntoWords != null)
             {
-                SafeCountIncrement(word);
+                    foreach (var word in textDividedIntoWords)
+                    {
+                        SafeCountIncrement(word);
+                    }
             }
         }
         

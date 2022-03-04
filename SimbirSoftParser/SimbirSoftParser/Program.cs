@@ -11,9 +11,16 @@ namespace SimbirSoftParser
             string site = Console.ReadLine();
             if (String.IsNullOrWhiteSpace(site))
                 site = "https://simbirsoft.com/";
-            WebAgent webConnection = new WebAgent(site);
-            webConnection.CountStatistics();
-            webConnection.PrintStatistics();
+            try
+            {
+                WebAgent webConnection = new WebAgent(site);
+                webConnection.CountStatistics();
+                webConnection.PrintStatistics();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
