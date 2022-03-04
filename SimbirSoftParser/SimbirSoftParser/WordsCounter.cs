@@ -12,6 +12,7 @@ namespace SimbirSoftParser
         {
             wordStatistics = new Dictionary<string, uint>();
         }
+        
         private void SafeCountIncrement(string word)
         {
             if (word.All(c => Char.IsLetter(c)))
@@ -26,6 +27,7 @@ namespace SimbirSoftParser
                 }
             }
         }
+        
         public void ExtractWords(string incoming)
         {
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
@@ -36,6 +38,7 @@ namespace SimbirSoftParser
                 SafeCountIncrement(word);
             }
         }
+        
         public void PrintWordsCounts(string site)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
