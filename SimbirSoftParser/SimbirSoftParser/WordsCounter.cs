@@ -43,7 +43,7 @@ namespace SimbirSoftParser
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            Console.WriteLine($"STATISTICS for {site}\n");
+            Console.WriteLine($"Статистика слов для сайта {site}\n");
             foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {
                 Console.WriteLine($"{entry.Value} \t {entry.Key}");
