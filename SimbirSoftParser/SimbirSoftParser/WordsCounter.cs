@@ -61,8 +61,6 @@ namespace SimbirSoftParser
             foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {
                 Console.WriteLine($"\n\n{entry.Value} \t {entry.Key}");
-                foreach (var letter in System.Text.Encoding.UTF8.GetBytes(entry.Key))
-                    Console.Write($" {letter}");
             }
         }
     }

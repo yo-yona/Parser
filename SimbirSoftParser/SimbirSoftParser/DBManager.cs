@@ -67,7 +67,7 @@ namespace SimbirSoftParser
             this.site = site;
             String connectionString = "Server=localhost;Integrated security=SSPI;database=master";
             myConn = new SqlConnection(connectionString);
-            CreateDB(false); 
+            //CreateDB(false); 
             CreateDB();
             CreateTab();
         }
