@@ -8,6 +8,7 @@ namespace SimbirSoftParser
     {
         SqlConnection myConn;
         String site;
+
         private void CreateDB(bool create=true)
         {
             String str, res;
@@ -40,6 +41,7 @@ namespace SimbirSoftParser
                 }
             }
         }
+
         private void CreateTab()
         {
             String str = "CREATE TABLE Cash (site varchar(255) NOT NULL, word varchar(255) NOT NULL, count int)";
@@ -71,9 +73,8 @@ namespace SimbirSoftParser
             CreateDB();
             CreateTab();
         }
-        /// <summary>
+
         /// Сохранение статистики в БД
-        /// </summary>
         public void PushToDB(Dictionary<string, uint> wordStatistics)
         {
             String str;
@@ -97,9 +98,8 @@ namespace SimbirSoftParser
                 }
             }
         }
-        /// <summary>
+
         /// Считывание из БД
-        /// </summary>
         public void CheckInDB(string site, ref Dictionary<string, uint> wordStatistics)
         {
             String str = $"select * from Cash where site = '{site}'";
