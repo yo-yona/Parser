@@ -12,7 +12,9 @@ namespace SimbirSoftParser
         {
             wordStatistics = new Dictionary<string, uint>();
         }
-        
+        /// <summary>
+        /// Если слово есть, увеличиваем счетчик, иначе добавляем в статистику
+        /// </summary>
         private void SafeCountIncrement(string word)
         {
             if (word.All(c => Char.IsLetter(c)))
@@ -27,7 +29,9 @@ namespace SimbirSoftParser
                 }
             }
         }
-        
+        /// <summary>
+        /// Делим текст на слова, разделяемые специальными знаками metaChar
+        /// </summary>
         private void ExtractWords(string incoming)
         {
             Console.WriteLine("WordsExtracter начал работу...");
@@ -42,7 +46,9 @@ namespace SimbirSoftParser
                     }
             }
         }
-        
+        /// <summary>
+        /// Вывод статистики для страницы (Если есть запись в БД, читаем оттуда. Если нет - подсчитываем заново)
+        /// </summary>
         public void PrintWordsCounts(string site, string content)
         {
             DBManager dbManager = new DBManager(site);

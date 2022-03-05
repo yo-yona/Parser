@@ -71,7 +71,9 @@ namespace SimbirSoftParser
             CreateDB();
             CreateTab();
         }
-
+        /// <summary>
+        /// Сохранение статистики в БД
+        /// </summary>
         public void PushToDB(Dictionary<string, uint> wordStatistics)
         {
             String str;
@@ -95,7 +97,9 @@ namespace SimbirSoftParser
                 }
             }
         }
-
+        /// <summary>
+        /// Считывание из БД
+        /// </summary>
         public void CheckInDB(string site, ref Dictionary<string, uint> wordStatistics)
         {
             String str = $"select * from Cash where site = '{site}'";
