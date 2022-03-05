@@ -8,22 +8,29 @@ namespace SimbirSoftParser
     {
         SqlConnection myConn;
         String site;
-        private void CreateDB()
+        private void CreateDB(bool create=true)
         {
-            String str = "CREATE DATABASE Stata";
+            String str, res;
+            if (create)
+            {
+                str = "CREATE DATABASE State";
+                res = "БД успешно создана";
+            }
+            else
+            {
+                str = "DROP DATABASE IF EXISTS State";
+                res = "БД удалена";
+            }
+
             SqlCommand createDB = new SqlCommand(str, myConn);
             try
             {
                 myConn.Open();
                 createDB.ExecuteNonQuery();
-                Console.WriteLine("DataBase is Created Successfully");
+                Console.WriteLine(res);
             }
             catch (System.Data.SqlClient.SqlException ex) 
             {
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
             }
             finally
             {
@@ -35,20 +42,16 @@ namespace SimbirSoftParser
         }
         private void CreateTab()
         {
-            String str = "CREATE TABLE Cashing (site varchar(255) NOT NULL, word varchar(255) NOT NULL, count int)";
+            String str = "CREATE TABLE Cash (site varchar(255) NOT NULL, word varchar(255) NOT NULL, count int)";
             SqlCommand createTab = new SqlCommand(str, myConn);
             try
             {
                 myConn.Open();
                 createTab.ExecuteNonQuery();
-                Console.WriteLine("Table is Created Successfully");
+                Console.WriteLine("Таблица создана");
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
             }
             finally
             {
@@ -62,10 +65,9 @@ namespace SimbirSoftParser
         public DBManager(string site)
         {
             this.site = site;
-            //String connectionString = "Server=localhost;Integrated security=SSPI;AttachDBFilename=" + System.IO.Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + "\\Stata.mdf;database=master";
-            //String connectionString = "Server=localhost;AttachDbFileName=" + System.IO.Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName + "\\Stat.mdf;Integrated Security=True;MultipleActiveResultSets=True";
             String connectionString = "Server=localhost;Integrated security=SSPI;database=master";
             myConn = new SqlConnection(connectionString);
+            CreateDB(false); 
             CreateDB();
             CreateTab();
         }
@@ -79,15 +81,11 @@ namespace SimbirSoftParser
                 myConn.Open();
                 foreach (var KVPair in wordStatistics)
                 {
-                    str = $"INSERT INTO Cashing (site, word, count) VALUES ('{site}','{KVPair.Key}','{KVPair.Value}')";
+                    str = $"INSERT INTO Cash (site, word, count) VALUES ('{site}','{KVPair.Key}','{KVPair.Value}')";
                     createDB = new SqlCommand(str, myConn);
                     createDB.ExecuteNonQuery();
                 }
-                Console.WriteLine("Saved to DB");
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Сохранено в БД");
             }
             finally
             {
@@ -100,8 +98,7 @@ namespace SimbirSoftParser
 
         public void CheckInDB(string site, ref Dictionary<string, uint> wordStatistics)
         {
-            //wordStatistics = new Dictionary<string, uint>();
-            String str = $"select * from Cashing where site = '{site}'";
+            String str = $"select * from Cash where site = '{site}'";
             SqlCommand myCommand = new SqlCommand(str, myConn);
             try
             {
@@ -109,18 +106,16 @@ namespace SimbirSoftParser
                 SqlDataReader myReader = myCommand.ExecuteReader();
                 while (myReader.Read())
                 {
-                    if (myReader["word"].ToString() == "РАЗРАБОТКА")
-                        Console.WriteLine($"{myReader["word"].ToString()}, {Convert.ToUInt32(myReader["count"])}");
+                    Console.WriteLine($"{myReader["word"].ToString()}, {Convert.ToUInt32(myReader["count"])}");
+                    foreach (var letter in System.Text.Encoding.UTF8.GetBytes(myReader["word"].ToString()))
+                        Console.Write($" {letter}");
+                    Console.Write("\n");
                     wordStatistics.Add(myReader["word"].ToString(), Convert.ToUInt32(myReader["count"]));
                 }
             }
             catch (System.Data.SqlClient.SqlException ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
             }
             finally
             {

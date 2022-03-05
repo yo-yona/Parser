@@ -30,8 +30,8 @@ namespace SimbirSoftParser
         
         private void ExtractWords(string incoming)
         {
-            Console.WriteLine("WordExtracter");
-            char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
+            Console.WriteLine("WordsExtracter начал работу...");
+            char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»', '?' };
 
             string[] textDividedIntoWords = incoming?.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
             if (textDividedIntoWords != null)
@@ -53,13 +53,16 @@ namespace SimbirSoftParser
                 dbManager.PushToDB(wordStatistics);
             }
             else
-                Console.WriteLine($"{site} has already been accessed. Results are taken from cash.");
+                Console.WriteLine($"Веб-страница {site} уже посещалась. Загружаю статистику из памяти...");
             
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.WriteLine($"Статистика слов для сайта {site}\n");
+            //Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.WriteLine($"\n\nСтатистика слов для сайта {site}");
+            Console.WriteLine($"======================================");
             foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {
-                Console.WriteLine($"{entry.Value} \t {entry.Key}");
+                Console.WriteLine($"\n\n{entry.Value} \t {entry.Key}");
+                foreach (var letter in System.Text.Encoding.UTF8.GetBytes(entry.Key))
+                    Console.Write($" {letter}");
             }
         }
     }
