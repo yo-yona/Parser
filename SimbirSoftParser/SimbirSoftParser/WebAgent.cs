@@ -17,6 +17,7 @@ namespace SimbirSoftParser
             content = client.DownloadString(site);
             content = DropInternalsOf(content, "script", "style");
             content = StripHTML(content);
+            this.PrintStatistics();
         }
         public string StripHTML(string HTMLText)
         {
@@ -33,16 +34,11 @@ namespace SimbirSoftParser
             }
             return HTMLText;
         }
-
-        public void CountStatistics()
-        {
-            wordsCounter = new WordsCounter();
-            wordsCounter.ExtractWords(content);
-        }
         
         public void PrintStatistics()
         {
-            wordsCounter?.PrintWordsCounts(site);
+            wordsCounter = new WordsCounter();
+            wordsCounter.PrintWordsCounts(site, content);
         }
     }
 }

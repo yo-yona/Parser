@@ -6,7 +6,7 @@ namespace SimbirSoftParser
 {
     class WordsCounter
     {
-        private Dictionary<string, uint> wordStatistics { get; set; }
+        private Dictionary<string, uint> wordStatistics;
 
         public WordsCounter()
         {
@@ -28,8 +28,9 @@ namespace SimbirSoftParser
             }
         }
         
-        public void ExtractWords(string incoming)
+        private void ExtractWords(string incoming)
         {
+            Console.WriteLine("WordExtracter");
             char[] metaChar = { ' ', ',', '.', '!', '?', '"', ';', ':', '[', ']', '(', ')', '\n', '\r', '\t', '/', '<', '>', '\'', '«', '»' };
 
             string[] textDividedIntoWords = incoming?.ToUpper().Split(metaChar, StringSplitOptions.RemoveEmptyEntries);
@@ -42,10 +43,19 @@ namespace SimbirSoftParser
             }
         }
         
-        public void PrintWordsCounts(string site)
+        public void PrintWordsCounts(string site, string content)
         {
+            DBManager dbManager = new DBManager(site);
+            dbManager.CheckInDB(site, ref wordStatistics);
+            if (wordStatistics.Count==0)
+            {
+                this.ExtractWords(content);
+                dbManager.PushToDB(wordStatistics);
+            }
+            else
+                Console.WriteLine($"{site} has already been accessed. Results are taken from cash.");
+            
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
             Console.WriteLine($"Статистика слов для сайта {site}\n");
             foreach (var entry in wordStatistics.OrderByDescending(kvPair => kvPair.Value))
             {

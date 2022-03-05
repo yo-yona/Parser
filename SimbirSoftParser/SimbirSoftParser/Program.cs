@@ -14,8 +14,6 @@ namespace SimbirSoftParser
             try
             {
                 WebAgent webConnection = new WebAgent(site);
-                webConnection.CountStatistics();
-                webConnection.PrintStatistics();
             }
             catch(Exception ex)
             {
